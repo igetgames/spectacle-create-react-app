@@ -1,14 +1,14 @@
 {
-  "name": "react-scripts",
+  "name": "@igetgames/spectacle-react-scripts",
   "version": "0.8.5",
-  "description": "Configuration and scripts for Create React App.",
-  "repository": "facebookincubator/create-react-app",
+  "description": "Configuration and scripts for Spectacle Create React App.",
+  "repository": "igetgames/spectacle-create-react-app",
   "license": "BSD-3-Clause",
   "engines": {
     "node": ">=4"
   },
   "bugs": {
-    "url": "https://github.com/facebookincubator/create-react-app/issues"
+    "url": "https://github.com/igetgames/spectacle-create-react-app/issues"
   },
   "files": [
     ".babelrc",
