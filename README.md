@@ -1,6 +1,6 @@
 # Spectacle Create React App [![Build Status](https://travis-ci.org/igetgames/spectacle-create-react-app.svg?branch=@igetgames/master)](https://travis-ci.org/igetgames/spectacle-create-react-app)
 
-Create React apps with no build configuration.
+Create React presentation apps using [Spectacle](http://formidable.com/open-source/spectacle/) with no build configuration.
 
 * [Getting Started](#getting-started) – How to create a new app.
 * [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) – How to develop apps bootstrapped with Create React App.
@@ -10,7 +10,7 @@ Create React apps with no build configuration.
 ```sh
 npm install -g create-react-app
 
-create-react-app my-app
+create-react-app my-app --scripts-version @igetgames/spectacle-react-scripts
 cd my-app/
 npm start
 
@@ -42,7 +42,7 @@ npm install -g create-react-app
 To create a new app, run:
 
 ```sh
-create-react-app my-app
+create-react-app my-app --scripts-version @igetgames/spectacle-react-scripts
 cd my-app
 ```
 
