@@ -1,4 +1,4 @@
-# Create React App [![Build Status](https://travis-ci.org/facebookincubator/create-react-app.svg?branch=master)](https://travis-ci.org/facebookincubator/create-react-app)
+# Spectacle Create React App [![Build Status](https://travis-ci.org/igetgames/spectacle-create-react-app.svg?branch=@igetgames/master)](https://travis-ci.org/igetgames/spectacle-create-react-app)
 
 Create React apps with no build configuration.
 
