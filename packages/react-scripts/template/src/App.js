@@ -11,7 +11,7 @@ import {
   Text
 } from 'spectacle';
 import createTheme from 'spectacle/lib/themes/default';
-import './App.css';
+import 'spectacle/lib/themes/default/index.css';
 
 const theme = createTheme({
   primary: "white",
