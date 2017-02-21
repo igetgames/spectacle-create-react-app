@@ -4,6 +4,7 @@ import {
   Cite,
   Deck,
   Heading,
+  Image,
   ListItem,
   List,
   Quote,
@@ -12,6 +13,8 @@ import {
 } from 'spectacle';
 import createTheme from 'spectacle/lib/themes/default';
 import 'spectacle/lib/themes/default/index.css';
+import logo from './logo.svg';
+import './App.css';
 
 const theme = createTheme({
   primary: "white",
@@ -31,6 +34,7 @@ class App extends Component {
           <Heading size={1} fit caps lineHeight={1} textColor="secondary">
             Spectacle Boilerplate
           </Heading>
+          <Image src={logo} className="App-logo" height="160px" />
           <Text margin="10px 0 0" textColor="tertiary" size={1} fit bold>
             open the src/App.js file to get started
           </Text>
