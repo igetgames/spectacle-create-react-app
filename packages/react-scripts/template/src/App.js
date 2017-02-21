@@ -10,9 +10,9 @@ import {
   Quote,
   Slide,
   Text
-} from 'spectacle';
-import createTheme from 'spectacle/lib/themes/default';
-import 'spectacle/lib/themes/default/index.css';
+} from '@igetgames/spectacle';
+import createTheme from '@igetgames/spectacle/lib/themes/default';
+import '@igetgames/spectacle/lib/themes/default/index.css';
 import logo from './logo.svg';
 import './App.css';
 
