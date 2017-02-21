@@ -65,20 +65,20 @@ set -x
 cd ..
 root_path=$PWD
 
-npm install
-
 # If the node version is < 4, the script should just give an error.
-if [ `node --version | sed -e 's/^v//' -e 's/\..\+//g'` -lt 4 ]
+if [[ `node --version | sed -e 's/^v//' -e 's/\..*//g'` -lt 4 ]]
 then
   cd $temp_app_path
   err_output=`node "$root_path"/packages/create-react-app/index.js test-node-version 2>&1 > /dev/null || echo ''`
   [[ $err_output =~ You\ are\ running\ Node ]] && exit 0 || exit 1
 fi
 
+npm install
+
 if [ "$USE_YARN" = "yes" ]
 then
   # Install Yarn so that the test can use it to install packages.
-  npm install -g yarn@0.17.10 # TODO: remove version when https://github.com/yarnpkg/yarn/issues/2142 is fixed.
+  npm install -g yarn
   yarn cache clean
 fi
 
@@ -149,6 +149,55 @@ create_react_app --scripts-version=$scripts_path test-app
 # let's make sure all npm scripts are in the working state.
 # ******************************************************************************
 
+function verify_env_url {
+  # Backup package.json because we're going to make it dirty
+  cp package.json package.json.orig
+
+  # Test default behavior
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 0 || exit 1
+
+  # Test relative path build
+  awk -v n=2 -v s="  \"homepage\": \".\"," 'NR == n {print s} {print}' package.json > tmp && mv tmp package.json
+
+  npm run build
+  # Disabled until this can be tested
+  # grep -F -R --exclude=*.map "../../static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"./static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
+
+  PUBLIC_URL="/anabsolute" npm run build
+  grep -F -R --exclude=*.map "/anabsolute/static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
+
+  # Test absolute path build
+  sed "2s/.*/  \"homepage\": \"\/testingpath\",/" package.json > tmp && mv tmp package.json
+
+  npm run build
+  grep -F -R --exclude=*.map "/testingpath/static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
+
+  PUBLIC_URL="https://www.example.net/overridetest" npm run build
+  grep -F -R --exclude=*.map "https://www.example.net/overridetest/static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
+  grep -F -R --exclude=*.map "testingpath/static" build/ -q; test $? -eq 1 || exit 1
+
+  # Test absolute url build
+  sed "2s/.*/  \"homepage\": \"https:\/\/www.example.net\/testingpath\",/" package.json > tmp && mv tmp package.json
+
+  npm run build
+  grep -F -R --exclude=*.map "/testingpath/static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
+
+  PUBLIC_URL="https://www.example.net/overridetest" npm run build
+  grep -F -R --exclude=*.map "https://www.example.net/overridetest/static/" build/ -q; test $? -eq 0 || exit 1
+  grep -F -R --exclude=*.map "\"/static/" build/ -q; test $? -eq 1 || exit 1
+  grep -F -R --exclude=*.map "testingpath/static" build/ -q; test $? -eq 1 || exit 1
+
+  # Restore package.json
+  rm package.json
+  mv package.json.orig package.json
+}
+
 # Enter the app directory
 cd test-app
 
@@ -168,6 +217,9 @@ CI=true npm test
 
 # Test the server
 npm start -- --smoke-test
+
+# Test environment handling
+verify_env_url
 
 # ******************************************************************************
 # Finally, let's check that everything still works after ejecting.
@@ -202,6 +254,8 @@ npm test -- --watch=no
 # Test the server
 npm start -- --smoke-test
 
+# Test environment handling
+verify_env_url
 
 # Cleanup
 cleanup

@@ -68,7 +68,7 @@ npm install
 if [ "$USE_YARN" = "yes" ]
 then
   # Install Yarn so that the test can use it to install packages.
-  npm install -g yarn@0.17.10 # TODO: remove version when https://github.com/yarnpkg/yarn/issues/2142 is fixed.
+  npm install -g yarn
   yarn cache clean
 fi
 
@@ -121,7 +121,11 @@ cd test-kitchensink
 npm link $root_path/packages/babel-preset-react-app
 
 # Test the build
-NODE_PATH=src REACT_APP_SHELL_ENV_MESSAGE=fromtheshell npm run build
+REACT_APP_SHELL_ENV_MESSAGE=fromtheshell \
+  NODE_PATH=src \
+  PUBLIC_URL=http://www.example.org/spa/ \
+  npm run build
+
 # Check for expected output
 exists build/*.html
 exists build/static/js/main.*.js
@@ -151,6 +155,7 @@ E2E_FILE=./build/index.html \
   CI=true \
   NODE_PATH=src \
   NODE_ENV=production \
+  PUBLIC_URL=http://www.example.org/spa/ \
   node_modules/.bin/mocha --require babel-register --require babel-polyfill integration/*.test.js
 
 # ******************************************************************************
@@ -169,11 +174,12 @@ npm link $root_path/packages/eslint-config-react-app
 npm link $root_path/packages/react-dev-utils
 npm link $root_path/packages/react-scripts
 
-# ...and we need to remove template's .babelrc
-rm .babelrc
-
 # Test the build
-NODE_PATH=src REACT_APP_SHELL_ENV_MESSAGE=fromtheshell npm run build
+REACT_APP_SHELL_ENV_MESSAGE=fromtheshell \
+  NODE_PATH=src \
+  PUBLIC_URL=http://www.example.org/spa/ \
+  npm run build
+
 # Check for expected output
 exists build/*.html
 exists build/static/js/main.*.js
@@ -203,6 +209,7 @@ E2E_FILE=./build/index.html \
   CI=true \
   NODE_ENV=production \
   NODE_PATH=src \
+  PUBLIC_URL=http://www.example.org/spa/ \
   node_modules/.bin/mocha --require babel-register --require babel-polyfill integration/*.test.js
 
 # Cleanup
